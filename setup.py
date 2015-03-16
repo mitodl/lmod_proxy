@@ -68,6 +68,9 @@ setup(
         'flask',
         'pylmod',
     ],
+    entry_points={'console_scripts': [
+        'lmod_proxy = lmod_proxy.cmd:run_server',
+    ]},
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

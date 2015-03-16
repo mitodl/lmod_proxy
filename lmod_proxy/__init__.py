@@ -7,6 +7,10 @@ API from edx-platform
 import os.path
 from pkg_resources import get_distribution, DistributionNotFound
 
+from flask import Flask
+
+from lmod_proxy.edx_grades import edx_grades
+
 
 def _get_version():
     """Grab version from pkg_resources"""
@@ -28,3 +32,19 @@ def _get_version():
 
 __project__ = 'lmod_proxy'
 __version__ = _get_version()
+
+
+app = Flask(__project__)
+app.config.from_object('{0}.config'.format(__project__))
+
+app.register_blueprint(edx_grades, url_prefix='/edx_grades')
+
+
+@app.route('/', methods=['GET'])
+def index():
+    """Welcome them to our amazing LMod Proxy
+
+    Return:
+        Flask.response
+    """
+    return '<h1>Welcome to LMod-Proxy'
