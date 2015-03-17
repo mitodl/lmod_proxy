@@ -5,6 +5,26 @@ REMOTE_GRADEBOOK feature.
 from flask import (
     Blueprint,
 )
+from wtforms import Form, SelectField, StringField
+
+
+ACTIONS = {
+    'post-grades': None,
+    'get-membership': None,
+    'get-assignments': None,
+    'get-sections': None,
+}
+
+
+class EdXGradesForm(Form):
+    """Form given to us by edx-platform."""
+    gbuuid = StringField(u'gbuuid')
+    user = StringField(u'user')
+    action = SelectField(
+        u'submit',
+        choices=[(x, x) for x in ACTIONS.keys()]
+    )
+
 
 edx_grades = Blueprint(
     'lmod_proxy_edx_grades',
