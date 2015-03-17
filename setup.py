@@ -13,9 +13,9 @@ with open('test_requirements.txt') as test_reqs:
 class PyTest(testcommand):
     user_options = testcommand.user_options[:]
     user_options += [
-        ('coverage', 'C', 'Produce a coverage report for proxy_Lmod'),
-        ('pep8', 'P', 'Produce a pep8 report for proxy_Lmod'),
-        ('flakes', 'F', 'Produce a flakes report for proxy_Lmod'),
+        ('coverage', 'C', 'Produce a coverage report for proxy_lmod'),
+        ('pep8', 'P', 'Produce a pep8 report for proxy_lmod'),
+        ('flakes', 'F', 'Produce a flakes report for proxy_lmod'),
     ]
     coverage = None
     pep8 = None
@@ -32,7 +32,7 @@ class PyTest(testcommand):
         self.test_args = []
         if self.coverage:
             self.test_args.append('--cov')
-            self.test_args.append('proxy_lmod')
+            self.test_args.append('lmod_proxy')
         if self.pep8:
             self.test_args.append('--pep8')
         if self.flakes:

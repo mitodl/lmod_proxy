@@ -22,10 +22,10 @@ def _get_version():
         here = os.path.normcase(os.path.abspath(__file__))
         if not here.startswith(
                 os.path.join(dist_loc, __project__)
-        ):  # pragma: no cover
+        ):
             # not installed, but there is another version that *is*
             raise DistributionNotFound
-    except DistributionNotFound:  # pragma: no cover
+    except DistributionNotFound:
         return 'Please install this project with setup.py'
     else:
         return dist.version

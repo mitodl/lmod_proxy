@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Blue print for handling the ``POST`` from the edx-platform
+"""Blueprint for handling the ``POST`` from the edx-platform
 REMOTE_GRADEBOOK feature.
 """
 from flask import (
@@ -16,9 +16,11 @@ edx_grades = Blueprint(
 
 @edx_grades.route('/', methods=['GET'])
 def index():
-    """Handle POST from edx-platform or print available actions
+    """Handle ``POST`` from edx-platform or print available actions, and
+    provide an interactive test of the available actions on ``GET``.
 
     Returns:
         flask.response
+
     """
     return '<h1>LMod Proxy edX Grades "API"</h1>'

@@ -7,6 +7,6 @@ install:
   - pip install coveralls
 script:
   - python setup.py test --coverage --pep8 --flakes
-  - coverage run --source=pylmod setup.py test
+  - coverage run --source=lmod_proxy setup.py test
 after_success:
   coveralls
