@@ -3,18 +3,16 @@
 import copy
 import json
 import logging
-import unittest
 
 import mock
 from pylmod.exceptions import PyLmodException
 
-import lmod_proxy.web
-
+from lmod_proxy.tests.common import CommonTest
 
 logging.basicConfig(level=logging.DEBUG)
 
 
-class TestEdXGrades(unittest.TestCase):
+class TestEdXGrades(CommonTest):
     """
     Primary test class for testing edX grades.
     """
@@ -31,7 +29,7 @@ class TestEdXGrades(unittest.TestCase):
     def setUp(self):
         """Setup commonly needed objects like the flask test client"""
         super(TestEdXGrades, self).setUp()
-        self.client = lmod_proxy.web.app.test_client()
+        self.client = self.app.test_client()
 
     def test_form(self):
         """Verify the form has all the fields as we expect it"""
@@ -84,16 +82,17 @@ class TestEdXGrades(unittest.TestCase):
         form = EdXGradesForm(**local_form)
         form.validate()
 
-        print form.data
         for key, item in form.data.items():
             self.assertEqual(self.FULL_FORM[key], item)
 
     @mock.patch('lmod_proxy.edx_grades.log')
     def test_get_root(self, log):
         """Test the GET response returns what we want"""
+        headers = self.get_basic_auth_headers()
+        headers['X-Forwarded-For'] = ['abc']
         response = self.client.get(
             self.EDX_GRADE_URL,
-            headers={'X-Forwarded-For': ['abc']}
+            headers=headers
         )
         self.assertEqual(200, response.status_code)
         log.info.assert_assert_called_with(
@@ -106,7 +105,11 @@ class TestEdXGrades(unittest.TestCase):
         local_form = copy.deepcopy(self.FULL_FORM)
         del local_form['user']
 
-        response = self.client.post(self.EDX_GRADE_URL, data=local_form)
+        response = self.client.post(
+            self.EDX_GRADE_URL,
+            data=local_form,
+            headers=self.get_basic_auth_headers()
+        )
         self.assertEqual(422, response.status_code)
         self.assertEqual(
             json.loads(response.data),
@@ -138,7 +141,9 @@ class TestEdXGrades(unittest.TestCase):
             for action in action_list:
                 local_form['submit'] = action
                 response = self.client.post(
-                    self.EDX_GRADE_URL, data=local_form
+                    self.EDX_GRADE_URL,
+                    data=local_form,
+                    headers=self.get_basic_auth_headers()
                 )
                 self.assertEqual(200, response.status_code)
                 self.assertTrue(mock_instrumented_actions[action].called)
