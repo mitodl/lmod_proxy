@@ -13,6 +13,7 @@ from flask import (
 )
 from pylmod import GradeBook
 
+from lmod_proxy.auth import requires_auth
 from lmod_proxy.edx_grades.forms import ACTIONS, EdXGradesForm
 
 log = logging.getLogger('lmod_proxy.edx_grades')
@@ -24,7 +25,7 @@ edx_grades = Blueprint(
 )
 
 
-@edx_grades.route('', methods=['GET', 'POST'])
+@edx_grades.route('/', methods=['GET'])
 def index():
     """Handle ``POST`` from edx-platform or print available actions, and
     provide an interactive test of the available actions on ``GET``.

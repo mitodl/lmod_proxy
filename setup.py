@@ -66,9 +66,11 @@ setup(
     packages=find_packages(),
     install_requires=[
         'flask',
+        'passlib',
         'pylmod',
         'PyYAML',
         'WTForms',
+
     ],
     entry_points={'console_scripts': [
         'lmod_proxy = lmod_proxy.cmd:run_server',

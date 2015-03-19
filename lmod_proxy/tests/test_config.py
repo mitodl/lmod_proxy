@@ -8,6 +8,8 @@ import unittest
 import mock
 import yaml
 
+from lmod_proxy.tests.test_auth import get_htpasswd_path
+
 
 class TestConfiguration(unittest.TestCase):
     """Test out configuration defaults, loading yaml/environ config,
@@ -74,4 +76,25 @@ class TestConfiguration(unittest.TestCase):
             self.assertEqual(
                 lmod_proxy.config._configure()['LMODP_CERT'],
                 env_test_cert
+            )
+
+    def test_htpasswd_to_file(self):
+        """Verify we can turn an HTPASSWD env to a file"""
+        # Read our test conf into string
+        self.addCleanup(os.remove, '.htpasswd')
+        with open(get_htpasswd_path()) as htpasswd_file:
+            htpasswd = htpasswd_file.read()
+        with mock.patch.dict(
+            'os.environ', {'LMODP_HTPASSWD': htpasswd}, clear=True
+        ):
+            import lmod_proxy.config
+            # Reload to reinitialize CONFIG_KEYS with patched environ
+            imp.reload(lmod_proxy.config)
+            self.assertTrue(os.path.isfile('.htpasswd'))
+            with open('.htpasswd') as htpasswd_file:
+                self.assertEqual(htpasswd, htpasswd_file.read())
+
+            self.assertEqual(
+                lmod_proxy.config._configure()['LMODP_HTPASSWD_PATH'],
+                '.htpasswd'
             )

@@ -22,7 +22,15 @@ CONFIG_KEYS = {
 
     # Base URL for which the gradebook API lives and accepts
     # certificate authentication
-    'LMODP_URLBASE': 'https://learning-modules.mit.edu:8443/'
+    'LMODP_URLBASE': 'https://learning-modules.mit.edu:8443/',
+
+    # Direct path to apache htpasswd file to use for basic auth
+    'LMODP_HTPASSWD_PATH': '.htpasswd',
+
+    # Setting that actually contains the strings of the htpasswd file
+    # for situations like heroku.  If set it will write out the string
+    # to a file for reading on startup.
+    'LMODP_HTPASSWD': None,
 }
 
 
@@ -45,6 +53,12 @@ def _configure():
         configuration[key] = os.environ.get(
             key, fallback_config.get(key, default_value)
         )
+
+    if configuration['LMODP_HTPASSWD']:
+        configuration['LMOD_HTPASSWD_PATH'] = os.path.abspath('.htpasswd')
+        with open(configuration['LMOD_HTPASSWD_PATH'], 'w') as wfile:
+            wfile.write(configuration['LMODP_HTPASSWD'])
+
     return configuration
 
 globals().update(_configure())
