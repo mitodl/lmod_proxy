@@ -37,9 +37,12 @@ class TestConfiguration(unittest.TestCase):
                 dict(app.config)
             )
 
-    def test_file_config_paths(self):
-        """Verify we load config files"""
+    def test_file_config_precedence_(self):
+        """Verify we load config files, that they beat defaults, and that
+        environment variables win.
+        """
         test_cert = 'testing'
+        env_test_cert = 'env_testing'
 
         _, temp_config_path = tempfile.mkstemp()
         self.addCleanup(os.remove, temp_config_path)
@@ -55,4 +58,18 @@ class TestConfiguration(unittest.TestCase):
             self.assertEqual(
                 lmod_proxy.config._configure()['LMODP_CERT'],
                 test_cert
+            )
+        with mock.patch.dict(
+            'os.environ', {
+                'LMODP_CONFIG': temp_config_path,
+                'LMODP_CERT': env_test_cert,
+            },
+            clear=True
+        ):
+            import lmod_proxy.config
+            # Reload to reinitialize CONFIG_KEYS with patched environ
+            imp.reload(lmod_proxy.config)
+            self.assertEqual(
+                lmod_proxy.config._configure()['LMODP_CERT'],
+                env_test_cert
             )
