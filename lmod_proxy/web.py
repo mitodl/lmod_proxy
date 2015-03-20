@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Root flask application for lmod_proxy"""
 
-from flask import Flask
+from flask import Flask, redirect, url_for
 
 from lmod_proxy import __project__
 from lmod_proxy.edx_grades import edx_grades
@@ -19,4 +19,4 @@ def index():
     Return:
         Flask.response
     """
-    return '<h1>Welcome to LMod-Proxy'
+    return redirect(url_for('edx_grades.index'))

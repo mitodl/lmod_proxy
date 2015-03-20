@@ -17,7 +17,7 @@ from lmod_proxy.edx_grades.forms import ACTIONS, EdXGradesForm
 
 log = logging.getLogger('lmod_proxy.edx_grades')
 edx_grades = Blueprint(
-    'lmod_proxy_edx_grades',
+    'edx_grades',
     __name__,
     template_folder='templates/edx_grades',
     static_folder='static/edx_grades',
@@ -71,4 +71,9 @@ def index():
 
     elif request.method == 'GET':
         log.info('edX remote gradebook GET request from %s', requestor)
-        return '<h1>LMod Proxy edX Grades "API"</h1>'
+        return render_template(
+            'index.html',
+            form=EdXGradesForm(),
+            cert=current_app.config['LMODP_CERT'],
+            urlbase=current_app.config['LMODP_URLBASE'],
+        )

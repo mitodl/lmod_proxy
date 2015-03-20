@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>LMod Proxy - edX Platform Remote Gradebook</title>
+    <link
+       rel="stylesheet"
+       href="{{ url_for('static',
+             filename='bower/furtive/site/index.furtive.min.css') }}"
+       >
+  </head>
+  <body>
+    <div class="txt--center">
+      <h2>LMod Proxy</h2>
+      <div class="bg--blue fnt--off-white">
+        <h3>edX Platform Remote Gradebook</h3>
+      </div>
+    </div>
+    <div class="p2">
+      <p>
+        Use the form below to exercise the edX platform remote gradebook
+        feature to the MIT Learning Modules API.
+      </p>
+      <h4 class="muted">Configuration</h4>
+      <ul>
+        <li>Client Certificate: <em>{{ cert }}</em></li>
+        <li>LMod URL: <em>{{ urlbase }}</em></li>
+      </ul>
+    </div>
+    <div class="p1 brdr--light-gray" id="results" style="display: none">
+      <div class="col-1" style="float: right">
+        <a href="#!" class="btn--blue" id="new-form">New Form</a>
+      </div>
+      <div id="result-msg"></div>
+      <div id="result-items" style="height: 200px; overflow:auto;">
+      </div>
+    </div>
+    <div class="p2 brdr--light-gray" id="form">
+      <div id="error" style="display: none;"
+           class="bg--red fnt--off-white p2"></div>
+      <form action="#" id="edx-form-post">
+        {{ form.gradebook.label }}
+        {{ form.gradebook(value="STELLAR:/project/mitxdemosite")  }}
+        {{ form.user.label }}
+        {{ form.user(placeholder="me@example.com") }}
+        {{ form.section.label }}
+        {{ form.section(placeholder="Optional Section") }}
+        
+        <label for="datafile">Optional CSV file for <em>Post Grades</em></label>
+        <input type="file" accept=".csv" id="datafile" name="datafile">
+
+        <input type="submit" name="submit" id="get-membership"
+               class="btn--green"
+               value="Get Membership">
+
+        <input type="submit" name="submit" id="get-assignments"
+               class="btn--green"
+               value="Get Assignments">
+
+        <input type="submit" name="submit" id="get-sections" class="btn--green"
+               value="Get Sections">
+
+        <input type="submit" name="submit" id="post-grades"
+               class="btn--gray"
+               value="Post Grades">
+      </form>
+    </div>
+    <script src="{{ url_for('static',
+    filename='bower/jquery2/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',
+    filename='site/js/site.js') }}"></script>
+  </body>
+</html>
