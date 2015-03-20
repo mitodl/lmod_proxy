@@ -58,3 +58,6 @@ node_modules/
 # App specific
 .cert.pem
 .htpasswd
+
+# Heroku
+.env
