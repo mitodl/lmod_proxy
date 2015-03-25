@@ -1,0 +1,9 @@
+<p>
+  {{ number_failed }} of grades failed to transfer
+</p>
+<ul>
+  {% for grade in failed_grades %}
+  <li>
+    {{ grade }}
+  </li>
+</ul>

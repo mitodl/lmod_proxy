@@ -31,10 +31,12 @@ class TestConfiguration(unittest.TestCase):
             import lmod_proxy.config
             # Reload to reinitialize CONFIG_KEYS with patched environ
             imp.reload(lmod_proxy.config)
-            from lmod_proxy.web import app
+            import lmod_proxy.web
+            imp.reload(lmod_proxy.web)
+
             self.assertDictContainsSubset(
                 lmod_proxy.config.CONFIG_KEYS,
-                dict(app.config)
+                dict(lmod_proxy.web.app.config)
             )
 
     def test_file_config_precedence_(self):

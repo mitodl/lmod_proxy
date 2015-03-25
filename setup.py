@@ -68,6 +68,7 @@ setup(
         'flask',
         'pylmod',
         'PyYAML',
+        'WTForms',
     ],
     entry_points={'console_scripts': [
         'lmod_proxy = lmod_proxy.cmd:run_server',
