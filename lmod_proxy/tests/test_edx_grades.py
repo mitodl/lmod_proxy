@@ -271,6 +271,7 @@ class TestEdXGrades(unittest.TestCase):
         template_list = [
             'grade_transfer_failed.html',
             'api_message.html',
+            'index.html',
         ]
 
         from lmod_proxy.edx_grades import edx_grades
