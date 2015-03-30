@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 """Configuration of flask application via environment, or file"""
-import logging
 import os
 
 import yaml
-
-log = logging.getLogger('gitreload')  # pylint: disable=C0103
-
 
 CONFIG_PATHS = [
     os.environ.get('LMODP_CONFIG', ''),
@@ -31,6 +27,9 @@ CONFIG_KEYS = {
     # for situations like heroku.  If set it will write out the string
     # to a file for reading on startup.
     'LMODP_HTPASSWD': None,
+
+    # Logging level
+    'FLASK_LOG_LEVEL': 'INFO',
 }
 
 
