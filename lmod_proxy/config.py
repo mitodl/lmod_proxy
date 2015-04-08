@@ -16,6 +16,12 @@ CONFIG_KEYS = {
     # combined file
     'LMODP_CERT': 'ocw.app.mit.edu-key-and-cert.pem',
 
+    # The base64 encoded string of the certificate as opposed to the
+    # path. This will trigger the app to write out the certificate on
+    # startup for environments that are best configured via variables
+    # only like Heroku.
+    'LMODP_CERT_STRING': '',
+
     # Base URL for which the gradebook API lives and accepts
     # certificate authentication
     'LMODP_URLBASE': 'https://learning-modules.mit.edu:8443/',
@@ -54,9 +60,14 @@ def _configure():
         )
 
     if configuration['LMODP_HTPASSWD']:
-        configuration['LMOD_HTPASSWD_PATH'] = os.path.abspath('.htpasswd')
-        with open(configuration['LMOD_HTPASSWD_PATH'], 'w') as wfile:
+        configuration['LMODP_HTPASSWD_PATH'] = os.path.abspath('.htpasswd')
+        with open(configuration['LMODP_HTPASSWD_PATH'], 'w') as wfile:
             wfile.write(configuration['LMODP_HTPASSWD'])
+
+    if configuration['LMODP_CERT_STRING']:
+        configuration['LMODP_CERT'] = os.path.abspath('.cert.pem')
+        with open(configuration['LMODP_CERT'], 'w') as wfile:
+            wfile.write(configuration['LMODP_CERT_STRING'])
 
     return configuration
 

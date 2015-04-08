@@ -96,5 +96,26 @@ class TestConfiguration(unittest.TestCase):
 
             self.assertEqual(
                 lmod_proxy.config._configure()['LMODP_HTPASSWD_PATH'],
-                '.htpasswd'
+                os.path.abspath('.htpasswd')
+            )
+
+    def test_cert_string_to_file(self):
+        """Verify we can turn an LMODP_CERT_STRING env variable to a file"""
+        self.addCleanup(os.remove, '.cert.pem')
+
+        cert_string = 'hello cert!'
+        with mock.patch.dict(
+            'os.environ', {'LMODP_CERT_STRING': cert_string}, clear=True
+        ):
+            import lmod_proxy.config
+            # Reload to reinitialize CONFIG_KEYS with patched environ
+            imp.reload(lmod_proxy.config)
+            self.assertTrue(os.path.isfile('.cert.pem'))
+
+            with open('.cert.pem') as cert_file:
+                self.assertEqual(cert_string, cert_file.read())
+
+            self.assertEqual(
+                lmod_proxy.config._configure()['LMODP_CERT'],
+                os.path.abspath('.cert.pem')
             )
