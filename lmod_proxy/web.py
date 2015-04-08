@@ -3,6 +3,7 @@
 import logging
 
 from flask import Flask, redirect, url_for
+from flask.ext.log import Logging
 from passlib.apache import HtpasswdFile
 
 from lmod_proxy import __project__
@@ -16,8 +17,9 @@ def app_factory():
     """Startup and application factory"""
     new_app = Flask(__project__)
     new_app.config.from_object('lmod_proxy.config'.format(__project__))
-    new_app.register_blueprint(edx_grades, url_prefix='/edx_grades')
+    Logging(new_app)
 
+    new_app.register_blueprint(edx_grades, url_prefix='/edx_grades')
     # Load up user database
     try:
         new_app.config['users'] = HtpasswdFile(
@@ -29,6 +31,13 @@ def app_factory():
             'environment variable to a valid apache htpasswd file.'
         )
         new_app.config['users'] = HtpasswdFile()
+    log.debug(
+        'Starting with configuration:\n %s',
+        '\n'.join([
+            '{0}: {1}'.format(x, y)
+            for x, y in sorted(dict(new_app.config).items())
+        ])
+    )
     return new_app
 
 

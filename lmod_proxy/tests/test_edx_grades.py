@@ -2,14 +2,11 @@
 """Unit testing for the edx_grades blueprint"""
 import copy
 import json
-import logging
 
 import mock
 from pylmod.exceptions import PyLmodException
 
 from lmod_proxy.tests.common import CommonTest
-
-logging.basicConfig(level=logging.DEBUG)
 
 
 class TestEdXGrades(CommonTest):
