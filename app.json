@@ -1,0 +1,23 @@
+{
+  "name": "LMod Proxy",
+  "description": "Proxies grades from Open edX platform to MIT campus Learning Modules",
+  "keywords": [
+    "flask",
+    "python",
+    "MIT",
+    "Learning Modules",
+    "Open edX",
+    "Grades"
+  ],
+  "website": "http://engineering.odl.mit.edu",
+  "repository": "https://github.com/mitodl/lmod_proxy",
+  "success_url": "/edx_grades",
+  "env": {
+    "LMODP_HTPASSWD": {
+      "description": "Pasted contents of an htpasswd file"
+    },
+    "LMODP_CERT_STRING": {
+      "description": "Pasted contents of an unencrypted base64 key and certificate from MIT."
+    }
+  }
+}

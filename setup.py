@@ -70,6 +70,7 @@ setup(
         'passlib',
         'pylmod',
         'PyYAML',
+        'uwsgi',
         'WTForms',
     ],
     entry_points={'console_scripts': [
