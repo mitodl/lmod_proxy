@@ -78,4 +78,5 @@ def index(user):
             form=EdXGradesForm(),
             cert=current_app.config['LMODP_CERT'],
             urlbase=current_app.config['LMODP_URLBASE'],
+            approve_grades=bool(current_app.config['LMODP_APPROVE_GRADES'])
         )

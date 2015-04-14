@@ -26,6 +26,11 @@ CONFIG_KEYS = {
     # certificate authentication
     'LMODP_URLBASE': 'https://learning-modules.mit.edu:8443/',
 
+    # Any value other than '' or unset enables grade approval in
+    # Learning Modules so that instructors do no have to do it
+    # manually for all grades posted in this instance.
+    'LMODP_APPROVE_GRADES': None,
+
     # Direct path to apache htpasswd file to use for basic auth
     'LMODP_HTPASSWD_PATH': '.htpasswd',
 
