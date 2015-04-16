@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """Forms needed for the edx_grade blueprint."""
-from wtforms import Form, SelectField, StringField, validators
+from flask_wtf import Form
+from flask_wtf.file import FileField
+from wtforms import SelectField, StringField, validators
 
 from lmod_proxy.edx_grades.actions import (
     post_grades,
@@ -31,8 +33,9 @@ class EdXGradesForm(Form):
     """Form given to us by edx-platform."""
     gradebook = StrippedField(validators=[validators.required()])
     user = StrippedField(id=u'user', validators=[validators.Email()])
-    datafile = StrippedField(
-        id=u'datafile', validators=[validators.Optional()]
+    datafile = FileField(
+        id=u'datafile',
+        validators=[validators.Optional()]
     )
     section = StrippedField(id=u'section', validators=[validators.Optional()])
     submit = SelectField(

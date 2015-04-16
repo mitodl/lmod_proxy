@@ -31,56 +31,58 @@ class TestEdXGrades(CommonTest):
     def test_form(self):
         """Verify the form has all the fields as we expect it"""
         from lmod_proxy.edx_grades.forms import EdXGradesForm
-        # Fully filled out form.
-        form = EdXGradesForm(**self.FULL_FORM)
-        self.assertTrue(form.validate())
 
-        # Make sure optional stuff is optional
-        local_form = copy.deepcopy(self.FULL_FORM)
-        del local_form['section']
-        del local_form['datafile']
-        form = EdXGradesForm(**local_form)
-        self.assertTrue(form.validate())
+        with self.app.app_context():
+            # Fully filled out form.
+            form = EdXGradesForm(**self.FULL_FORM)
+            self.assertTrue(form.validate())
 
-        # Make sure required stuff is required
-        local_form = copy.deepcopy(self.FULL_FORM)
-        del local_form['user']
-        form = EdXGradesForm(**local_form)
-        self.assertFalse(form.validate())
+            # Make sure optional stuff is optional
+            local_form = copy.deepcopy(self.FULL_FORM)
+            del local_form['section']
+            del local_form['datafile']
+            form = EdXGradesForm(**local_form)
+            self.assertTrue(form.validate())
 
-        local_form = copy.deepcopy(self.FULL_FORM)
-        del local_form['submit']
-        form = EdXGradesForm(**local_form)
-        self.assertFalse(form.validate())
+            # Make sure required stuff is required
+            local_form = copy.deepcopy(self.FULL_FORM)
+            del local_form['user']
+            form = EdXGradesForm(**local_form)
+            self.assertFalse(form.validate())
 
-        local_form = copy.deepcopy(self.FULL_FORM)
-        del local_form['gradebook']
-        form = EdXGradesForm(**local_form)
-        self.assertFalse(form.validate())
+            local_form = copy.deepcopy(self.FULL_FORM)
+            del local_form['submit']
+            form = EdXGradesForm(**local_form)
+            self.assertFalse(form.validate())
 
-        # Verify user must be email
-        local_form = copy.deepcopy(self.FULL_FORM)
-        local_form['user'] = 'foo'
-        form = EdXGradesForm(**local_form)
-        self.assertFalse(form.validate())
+            local_form = copy.deepcopy(self.FULL_FORM)
+            del local_form['gradebook']
+            form = EdXGradesForm(**local_form)
+            self.assertFalse(form.validate())
 
-        # Verify submit choices
-        local_form = copy.deepcopy(self.FULL_FORM)
-        local_form['submit'] = 'not-real'
-        form = EdXGradesForm(**local_form)
-        self.assertFalse(form.validate())
+            # Verify user must be email
+            local_form = copy.deepcopy(self.FULL_FORM)
+            local_form['user'] = 'foo'
+            form = EdXGradesForm(**local_form)
+            self.assertFalse(form.validate())
 
-        # Verify we strip spaces
-        local_form = copy.deepcopy(self.FULL_FORM)
-        strip_key_list = ('user', 'gradebook', 'datafile', 'section')
-        for key in strip_key_list:
-            local_form[key] = ' {0} '.format(local_form[key])
+            # Verify submit choices
+            local_form = copy.deepcopy(self.FULL_FORM)
+            local_form['submit'] = 'not-real'
+            form = EdXGradesForm(**local_form)
+            self.assertFalse(form.validate())
 
-        form = EdXGradesForm(**local_form)
-        form.validate()
+            # Verify we strip spaces
+            local_form = copy.deepcopy(self.FULL_FORM)
+            strip_key_list = ('user', 'gradebook', 'section')
+            for key in strip_key_list:
+                local_form[key] = ' {0} '.format(local_form[key])
 
-        for key, item in form.data.items():
-            self.assertEqual(self.FULL_FORM[key], item)
+            form = EdXGradesForm(**local_form)
+            form.validate()
+
+            for key, item in form.data.items():
+                self.assertEqual(self.FULL_FORM[key], item)
 
     @mock.patch('lmod_proxy.edx_grades.log')
     def test_get_root(self, log):
@@ -152,7 +154,8 @@ class TestEdXGrades(CommonTest):
         from lmod_proxy.edx_grades.forms import EdXGradesForm
         from lmod_proxy.edx_grades.actions import get_sections
 
-        form = EdXGradesForm(**self.FULL_FORM)
+        with self.app.app_context():
+            form = EdXGradesForm(**self.FULL_FORM)
         gradebook = mock.MagicMock()
         gradebook.get_sections.return_value = 'foo'
 
@@ -175,7 +178,8 @@ class TestEdXGrades(CommonTest):
         from lmod_proxy.edx_grades.forms import EdXGradesForm
         from lmod_proxy.edx_grades.actions import get_assignments
 
-        form = EdXGradesForm(**self.FULL_FORM)
+        with self.app.app_context():
+            form = EdXGradesForm(**self.FULL_FORM)
         gradebook = mock.MagicMock()
         gradebook.get_assignments.return_value = 'foo'
 
@@ -198,7 +202,8 @@ class TestEdXGrades(CommonTest):
         from lmod_proxy.edx_grades.forms import EdXGradesForm
         from lmod_proxy.edx_grades.actions import get_membership
 
-        form = EdXGradesForm(**self.FULL_FORM)
+        with self.app.app_context():
+            form = EdXGradesForm(**self.FULL_FORM)
         gradebook = mock.MagicMock()
         gradebook.get_students.return_value = 'foo'
 
@@ -222,13 +227,18 @@ class TestEdXGrades(CommonTest):
         self.assertEqual(message, 'test')
         self.assertEqual(data, [{}])
 
-    @mock.patch('lmod_proxy.edx_grades.actions.StringIO')
-    def test_post_grades(self, mock_io):
+    @mock.patch('lmod_proxy.edx_grades.actions.log')
+    def test_post_grades(self, mock_log):
         """Test post_grades actions as expected"""
         from lmod_proxy.edx_grades.forms import EdXGradesForm
         from lmod_proxy.edx_grades.actions import post_grades
 
-        form = EdXGradesForm(**self.FULL_FORM)
+        file_form = copy.deepcopy(self.FULL_FORM)
+        file_mock = mock.MagicMock()
+        file_mock.stream.read.return_value = file_form['datafile']
+        file_form['datafile'] = file_mock
+        with self.app.app_context():
+            form = EdXGradesForm(**file_form)
         gradebook = mock.MagicMock()
         gradebook_return = {'data': {'test': 'foo'}}
         gradebook.spreadsheet2gradebook.return_value = (gradebook_return, 1)
@@ -237,7 +247,10 @@ class TestEdXGrades(CommonTest):
         with self.app.app_context():
             message, data, success = post_grades(gradebook, form)
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
-        mock_io.assert_called_with(self.FULL_FORM['datafile'])
+        mock_log.debug.assert_called_with(
+            'Received grade CSV: %s',
+            self.FULL_FORM['datafile']
+        )
         self.assertEqual(data, [])
 
         # Now raise an expected exception
@@ -246,7 +259,10 @@ class TestEdXGrades(CommonTest):
         with self.app.app_context():
             message, data, success = post_grades(gradebook, form)
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
-        mock_io.assert_called_with(self.FULL_FORM['datafile'])
+        mock_log.debug.assert_called_with(
+            'Received grade CSV: %s',
+            self.FULL_FORM['datafile']
+        )
         self.assertFalse(success)
         self.assertEqual(message, 'test')
         self.assertEqual(data, [])
@@ -261,22 +277,32 @@ class TestEdXGrades(CommonTest):
                     'lmod_proxy.edx_grades.actions.render_template'
             ) as mock_template:
                 message, data, success = post_grades(gradebook, form)
-                self.assertTrue(gradebook.spreadsheet2gradebook.called)
-                mock_io.assert_called_with(self.FULL_FORM['datafile'])
-                mock_template.assert_called_with(
-                    'grade_transfer_failed.html',
-                    number_failed=100,
-                    failed_grades=['completely unexpected']
-                )
-                self.assertFalse(success)
-                self.assertEqual(data, [])
+
+        self.assertTrue(gradebook.spreadsheet2gradebook.called)
+        mock_log.debug.assert_called_with(
+            'Received grade CSV: %s',
+            self.FULL_FORM['datafile']
+        )
+        mock_template.assert_called_with(
+            'grade_transfer_failed.html',
+            number_failed=100,
+            failed_grades=['completely unexpected']
+        )
+        self.assertFalse(success)
+        self.assertEqual(data, [])
 
     def test_post_grades_approve(self):
         """Validate that approve grades works"""
         from lmod_proxy.edx_grades.forms import EdXGradesForm
         from lmod_proxy.edx_grades.actions import post_grades
 
-        form = EdXGradesForm(**self.FULL_FORM)
+        file_form = copy.deepcopy(self.FULL_FORM)
+        file_mock = mock.MagicMock()
+        file_mock.stream.read.return_value = file_form['datafile']
+        file_form['datafile'] = file_mock
+
+        with self.app.app_context():
+            form = EdXGradesForm(**file_form)
         gradebook = mock.MagicMock()
         gradebook_return = {'data': {'test': 'foo'}}
         gradebook.spreadsheet2gradebook.return_value = (gradebook_return, 1)

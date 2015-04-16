@@ -39,10 +39,11 @@ def index(user):
         requestor = request.headers.getlist("X-Forwarded-For")[0]
 
     if request.method == 'POST':
-        form = EdXGradesForm(request.form)
+        form = EdXGradesForm()
         log.info('edX remote gradebook POST request from %s', requestor)
-        log.debug('POST data: {0}'.format(request.form))
-        log.debug('Form values: {0}'.format(form.data))
+        log.debug('Headers: %r', request.headers)
+        log.debug('POST data: %r', request.form)
+        log.debug('Form values: %r', form.data)
         if form.validate():
             message, data, success = ACTIONS[form.submit.data](
                 GradeBook(

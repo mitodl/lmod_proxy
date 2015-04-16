@@ -16,7 +16,13 @@ $(document).ready(function(){
 
   function post_call(data) {
     $('#error').hide(100);
-    $.post(location.pathname, data)
+    $.ajax({
+      url: location.pathname, 
+      data: data,
+      type: 'POST',
+      processData: false,
+      contentType: false
+    })
       .done(function(data, status){
         $('#result-msg').html(data['msg']); 
 
@@ -70,56 +76,52 @@ $(document).ready(function(){
 
   // Submit form handling
   $('#get-membership').click(function(event){
-    post_call({
-      'gradebook': $('#gradebook').val(),
-      'user': $('#user').val(),
-      'section': $('#section').val(),
-      'submit': 'get-membership',
-    });
+    form_data = new FormData();
+    form_data.append('gradebook', $('#gradebook').val());
+    form_data.append('user', $('#user').val());
+    form_data.append('section', $('#section').val());
+    form_data.append('submit', 'get-membership')
+    post_call(form_data)
     event.preventDefault();
   });
 
   $('#get-assignments').click(function(event){
-    post_call({
-      'gradebook': $('#gradebook').val(),
-      'user': $('#user').val(),
-      'section': $('#section').val(),
-      'submit': 'get-assignments',
-    });
+    form_data = new FormData();
+    form_data.append('gradebook', $('#gradebook').val());
+    form_data.append('user', $('#user').val());
+    form_data.append('section', $('#section').val());
+    form_data.append('submit', 'get-assignments')
+    post_call(form_data)
     event.preventDefault();
   });
 
   $('#get-sections').click(function(event){
-    post_call({
-      'gradebook': $('#gradebook').val(),
-      'user': $('#user').val(),
-      'section': $('#section').val(),
-      'submit': 'get-sections',
-    });
+    form_data = new FormData();
+    form_data.append('gradebook', $('#gradebook').val());
+    form_data.append('user', $('#user').val());
+    form_data.append('section', $('#section').val());
+    form_data.append('submit', 'get-sections')
+    post_call(form_data)
     event.preventDefault();
   });
 
   $('#post-grades').click(function(event){
     var file = $('#datafile').prop('files')[0];
     if(typeof file === "undefined") {
-        $('#error').html(
-          '<p>CSV file is required for <em>Post Grades</em></p>'
-        );
-        $('#error').show(500);      
+      $('#error').html(
+        '<p>CSV file is required for <em>Post Grades</em></p>'
+      );
+      $('#error').show(500);
+      event.preventDefault();
+      return;
     }
-    var datafile = ''
-    file_reader = new FileReader();
-    file_reader.onload = function() {
-      datafile = file_reader.result;
-      post_call({
-        'gradebook': $('#gradebook').val(),
-        'user': $('#user').val(),
-        'section': $('#section').val(),
-        'datafile': datafile,
-        'submit': 'post-grades',
-      });
-    }
-    file_reader.readAsText(file);
+    form_data = new FormData();
+    form_data.append('gradebook', $('#gradebook').val());
+    form_data.append('user', $('#user').val());
+    form_data.append('section', $('#section').val());
+    form_data.append('datafile', file);
+    form_data.append('submit', 'post-grades')
+    post_call(form_data)
     event.preventDefault();
   });
 

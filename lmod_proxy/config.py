@@ -41,6 +41,9 @@ CONFIG_KEYS = {
 
     # Logging level
     'FLASK_LOG_LEVEL': 'INFO',
+
+    # Disable WTF CSRF protection
+    'WTF_CSRF_ENABLED': False,
 }
 
 
