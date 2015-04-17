@@ -1,5 +1,9 @@
 --index-url https://pypi.python.org/simple/
-
-WTForms>=2.0.2
--e git+https://github.com/mitodl/pylmod.git#egg=pylmod
+flask==0.10.1
+flask-log==0.1.0
+passlib==1.6.2
+pylmod==0.1.0
+PyYAML==3.11
+uwsgi==2.0.10
+ 
 -e .
