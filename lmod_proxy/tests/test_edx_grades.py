@@ -234,7 +234,8 @@ class TestEdXGrades(CommonTest):
         gradebook.spreadsheet2gradebook.return_value = (gradebook_return, 1)
 
         # Call regularly
-        message, data, success = post_grades(gradebook, form)
+        with self.app.app_context():
+            message, data, success = post_grades(gradebook, form)
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
         mock_io.assert_called_with(self.FULL_FORM['datafile'])
         self.assertEqual(data, [])
@@ -242,7 +243,8 @@ class TestEdXGrades(CommonTest):
         # Now raise an expected exception
         self.assertTrue(success)
         gradebook.spreadsheet2gradebook.side_effect = PyLmodException('test')
-        message, data, success = post_grades(gradebook, form)
+        with self.app.app_context():
+            message, data, success = post_grades(gradebook, form)
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
         mock_io.assert_called_with(self.FULL_FORM['datafile'])
         self.assertFalse(success)
@@ -254,19 +256,42 @@ class TestEdXGrades(CommonTest):
         gradebook_return['data']['results'] = ['completely unexpected']
         gradebook.spreadsheet2gradebook.side_effect = None
 
-        with mock.patch(
-                'lmod_proxy.edx_grades.actions.render_template'
-        ) as mock_template:
-            message, data, success = post_grades(gradebook, form)
-            self.assertTrue(gradebook.spreadsheet2gradebook.called)
-            mock_io.assert_called_with(self.FULL_FORM['datafile'])
-            mock_template.assert_called_with(
-                'grade_transfer_failed.html',
-                number_failed=100,
-                failed_grades=['completely unexpected']
-            )
-            self.assertFalse(success)
-            self.assertEqual(data, [])
+        with self.app.app_context():
+            with mock.patch(
+                    'lmod_proxy.edx_grades.actions.render_template'
+            ) as mock_template:
+                message, data, success = post_grades(gradebook, form)
+                self.assertTrue(gradebook.spreadsheet2gradebook.called)
+                mock_io.assert_called_with(self.FULL_FORM['datafile'])
+                mock_template.assert_called_with(
+                    'grade_transfer_failed.html',
+                    number_failed=100,
+                    failed_grades=['completely unexpected']
+                )
+                self.assertFalse(success)
+                self.assertEqual(data, [])
+
+    def test_post_grades_approve(self):
+        """Validate that approve grades works"""
+        from lmod_proxy.edx_grades.forms import EdXGradesForm
+        from lmod_proxy.edx_grades.actions import post_grades
+
+        form = EdXGradesForm(**self.FULL_FORM)
+        gradebook = mock.MagicMock()
+        gradebook_return = {'data': {'test': 'foo'}}
+        gradebook.spreadsheet2gradebook.return_value = (gradebook_return, 1)
+
+        with self.app.app_context():
+            with mock.patch.dict(
+                'lmod_proxy.edx_grades.actions.current_app.config',
+                {'LMODP_APPROVE_GRADES': 'a'}
+            ):
+                _, data, _ = post_grades(gradebook, form)
+        self.assertTrue(gradebook.spreadsheet2gradebook.called)
+        self.assertTrue(
+            gradebook.spreadsheet2gradebook.call_args[1]['approve_grades']
+        )
+        self.assertEqual(data, [])
 
     def test_template_existence(self):
         """Just an OS test that the templates we need exist"""

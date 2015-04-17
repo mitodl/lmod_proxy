@@ -3,7 +3,7 @@
 """
 from cStringIO import StringIO
 
-from flask import render_template
+from flask import render_template, current_app
 from requests.exceptions import RequestException
 
 from pylmod.exceptions import PyLmodException
@@ -19,11 +19,16 @@ def post_grades(gradebook, form):
         tuple: message(str), data(list), success(bool)
     """
     error_message = ''
+    approve_grades = False
+    if current_app.config['LMODP_APPROVE_GRADES']:
+        approve_grades = True
 
     fake_csv = StringIO(form.datafile.data)
     results = None
     try:
-        results, time_taken = gradebook.spreadsheet2gradebook(fake_csv)
+        results, time_taken = gradebook.spreadsheet2gradebook(
+            csv_file=fake_csv, approve_grades=approve_grades
+        )
     except PyLmodException, ex:
         error_message = unicode(ex)
 
