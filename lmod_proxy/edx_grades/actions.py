@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """Actions to perform based on API request.
 """
-from cStringIO import StringIO
+import logging
 
 from flask import render_template, current_app
 from requests.exceptions import RequestException
 
 from pylmod.exceptions import PyLmodException
+
+log = logging.getLogger(__name__)
 
 
 def post_grades(gradebook, form):
@@ -22,12 +24,14 @@ def post_grades(gradebook, form):
     approve_grades = False
     if current_app.config['LMODP_APPROVE_GRADES']:
         approve_grades = True
-
-    fake_csv = StringIO(form.datafile.data)
+    csv_file = form.datafile.data.stream
+    log.debug('Received grade CSV: %s', csv_file.read())
+    # Seek back to 0 for future reading
+    csv_file.seek(0)
     results = None
     try:
         results, time_taken = gradebook.spreadsheet2gradebook(
-            csv_file=fake_csv, approve_grades=approve_grades
+            csv_file=csv_file, approve_grades=approve_grades
         )
     except PyLmodException, ex:
         error_message = unicode(ex)

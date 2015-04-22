@@ -1,9 +1,6 @@
-<p>
-  {{ number_failed }} of grades failed to transfer
-</p>
-<ul>
-  {% for grade in failed_grades %}
-  <li>
-    {{ grade }}
-  </li>
-</ul>
+{{ number_failed }} grade{% if number_failed > 1 %}s{% endif %} failed to transfer
+{% for grade in failed_grades %}
+  {% if grade['status'] == -1 %}
+    {{ grade['message'] }}
+  {% endif %}
+{% endfor %}
