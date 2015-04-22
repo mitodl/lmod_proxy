@@ -1,0 +1,11 @@
+[run]
+
+branch = True
+
+[paths]
+
+source = lmod_proxy
+
+[report]
+exclude_lines =
+    pragma: no cover

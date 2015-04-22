@@ -52,3 +52,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+node_modules/
+
+# App specific
+.cert.pem
+.htpasswd
+
+# Heroku
+.env
