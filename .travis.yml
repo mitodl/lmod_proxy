@@ -2,11 +2,17 @@ language: python
 python:
   - 2.7
 install:
-  # Replace this with `pip install -e .` once pylmod is in pypi
   - pip install -r requirements.txt
   - pip install coveralls
 script:
   - python setup.py test --coverage --pep8 --flakes
   - coverage run --source=lmod_proxy setup.py test
-after_success:
-  coveralls
+after_success: coveralls
+deploy:
+  provider: heroku
+  api_key:
+    secure: gHKG6WIKW/MHqTkhdEKZO47SL6Bw1w6kHct/zSwO9fcNA6lLngoTXgJ0AgXdXYoIn5suHgOTM5E1TFRbJ/63tCgGLJgZHkqa0CBZHrp2hK2E2K6rRmGq0QawRfu2QIFN+97VhtLB0pbXzsKYUJRFRWBrLoi62SalxUIJXj8MxJ8=
+  app:
+    master: lmod-proxy-ci
+  on:
+    repo: mitodl/lmod_proxy
