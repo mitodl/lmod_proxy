@@ -16,7 +16,9 @@ class TestEdXGrades(CommonTest):
     FULL_FORM = dict(
         gradebook='test_gradebook',
         user='user@example.com',
-        datafile='a,b,c',
+        datafile=[
+            ['External email', 'Multiple Choice Questions', 'max_pts'],
+            ['staff@example.com', '2.0', '3.0']],
         section='test_section',
         submit='get-membership'
     )
@@ -94,7 +96,7 @@ class TestEdXGrades(CommonTest):
             headers=headers
         )
         self.assertEqual(200, response.status_code)
-        log.info.assert_assert_called_with(
+        log.info.assert_called_with(
             'edX remote gradebook GET request from %s',
             'abc'
         )
