@@ -86,7 +86,7 @@ class TestEdXGrades(CommonTest):
             for key, item in form.data.items():
                 self.assertEqual(self.FULL_FORM[key], item)
 
-    @mock.patch('lmod_proxy.edx_grades.log')
+    @mock.patch('lmod_proxy.edx_grades.log', autospec=True)
     def test_get_root(self, log):
         """Test the GET response returns what we want"""
         headers = self.get_basic_auth_headers()
@@ -121,7 +121,7 @@ class TestEdXGrades(CommonTest):
             }
         )
 
-    @mock.patch('lmod_proxy.edx_grades.GradeBook')
+    @mock.patch('lmod_proxy.edx_grades.GradeBook', autospec=True)
     def test_post_actions(self, patched_gradebook):
         """Verify that we call the right functions with each action type"""
         local_form = copy.deepcopy(self.FULL_FORM)
@@ -229,7 +229,7 @@ class TestEdXGrades(CommonTest):
         self.assertEqual(message, 'test')
         self.assertEqual(data, [{}])
 
-    @mock.patch('lmod_proxy.edx_grades.actions.log')
+    @mock.patch('lmod_proxy.edx_grades.actions.log', autospec=True)
     def test_post_grades(self, mock_log):
         """Test post_grades actions as expected"""
         from lmod_proxy.edx_grades.forms import EdXGradesForm
@@ -276,7 +276,8 @@ class TestEdXGrades(CommonTest):
 
         with self.app.app_context():
             with mock.patch(
-                    'lmod_proxy.edx_grades.actions.render_template'
+                    'lmod_proxy.edx_grades.actions.render_template',
+                    autospec=True
             ) as mock_template:
                 message, data, success = post_grades(gradebook, form)
 
