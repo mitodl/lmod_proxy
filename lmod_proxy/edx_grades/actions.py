@@ -30,6 +30,16 @@ def post_grades(gradebook, form):
     csv_file.seek(0)
     results = None
     try:
+        # Create assignment to explicitly set max points.
+        assignment, max_points = _get_assignment_name_max_points(form)
+        gradebook.create_assignment(
+            assignment[0:3] + assignment[-2:],
+            assignment,
+            1.0,
+            max_points,
+            '12-15-2013',
+            gradebook.gradebook_id
+        )
         results, time_taken = gradebook.spreadsheet2gradebook(
             csv_file=csv_file, approve_grades=approve_grades
         )
@@ -119,3 +129,13 @@ def get_sections(gradebook, form):
         data,
         not bool(error_message)
     )
+
+
+def _get_assignment_name_max_points(form):
+    try:
+        csv_data = form.datafile.data.stream.read()
+        short_name = csv_data[0][1]
+        max_points = csv_data[1][2]
+        return short_name, max_points
+    except IOError:
+        raise
