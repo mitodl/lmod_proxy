@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Actions to perform based on API request.
 """
-import csv
 import logging
 
 from flask import render_template, current_app
@@ -34,7 +33,7 @@ def post_grades(gradebook, form):
         # Create assignment to explicitly set max points.
         assignment, max_points = _get_assignment_name_max_points(form)
         gradebook.create_assignment(
-            assignment,
+            assignment[0:3] + assignment[-2:],
             assignment,
             1.0,
             max_points,
@@ -134,10 +133,9 @@ def get_sections(gradebook, form):
 
 def _get_assignment_name_max_points(form):
     try:
-        csv_file = form.datafile.data.stream
-        reader = csv.reader(csv_file)
-        short_name = reader.next()[1]
-        max_points = reader.next()[2]
+        csv_data = form.datafile.data.stream.read()
+        short_name = csv_data[0][1]
+        max_points = csv_data[1][2]
         return short_name, max_points
-    finally:
-        csv_file.close()
+    except IOError:
+        raise
