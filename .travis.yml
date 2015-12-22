@@ -11,7 +11,7 @@ after_success: coveralls
 deploy:
   provider: heroku
   api_key:
-    secure: iEb+lujANK3Do+qoXh4nGBppUMYGTwV0MlmjNn/Xv2HkBM/B6EJnR5NiE3qjJRbfsI5WDbdQht3fD6y997z8ishyEwsY9pkK4aO0W6mspJD0vzN6UQVnkTJRLSaCVs13seaP51uNqQfEsRF0UcOYLqpWDlxxsY/wUflenWsq8gg=
+    secure: LYKVjLOZ3jGUF9SUiRTyBTAskZI2JKgJVgHnSsGJ163A6qwcERKGXtg0iB0yxFTx01ND2kvzH2Mnilc7M60NHxdT04f8mdLXnNIYsgdtryZ93QFwJrWhkX/C8Q++E02TGR3Y+o668t/c7fnqJ2zntvYM8xk4ZE/pvvv5e4B+/z4=
   app:
     master: lmod-proxy-ci
   on:
