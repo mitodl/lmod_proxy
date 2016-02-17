@@ -8,3 +8,6 @@ lmodproxy:
     LMODP_APPROVE_GRADES:
   ports:
     - "8080:8080"
+  volumes:
+    - .:/src
+    - /tmp
