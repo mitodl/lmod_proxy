@@ -31,7 +31,11 @@ def post_grades(gradebook, form):
     results = None
     try:
         results, time_taken = gradebook.spreadsheet2gradebook(
-            csv_file=csv_file, approve_grades=approve_grades
+            csv_file=csv_file,
+            approve_grades=approve_grades,
+            use_max_points_column=True,
+            max_points_column='max_pts',
+            normalize_column='normalize'
         )
     except PyLmodException, ex:
         error_message = unicode(ex)
