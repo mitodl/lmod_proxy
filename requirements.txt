@@ -4,7 +4,7 @@ flask-log==0.1.0
 passlib==1.6.2
 pylmod==0.2.0
 PyYAML==3.11
-setuptools==20.1.1
+setuptools==20.2.2
 uwsgi==2.0.10
 
 -e .
