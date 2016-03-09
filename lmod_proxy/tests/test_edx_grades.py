@@ -323,7 +323,10 @@ class TestEdXGrades(CommonTest):
             form = EdXGradesForm(**file_form)
             gradebook = mock.MagicMock()
             gradebook_return = {'data': {'test': 'foo'}}
-            gradebook.spreadsheet2gradebook.return_value = (gradebook_return, 1)
+            gradebook.spreadsheet2gradebook.return_value = (
+                gradebook_return,
+                1
+            )
 
             with mock.patch.dict(
                 'lmod_proxy.edx_grades.actions.current_app.config',
