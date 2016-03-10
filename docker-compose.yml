@@ -1,0 +1,13 @@
+lmodproxy:
+  build: .
+  environment:
+    PORT: 8080
+    LMODP_HTPASSWD:
+    LMODP_CERT_STRING:
+    FLASK_LOG_LEVEL:
+    LMODP_APPROVE_GRADES:
+  ports:
+    - "8080:8080"
+  volumes:
+    - .:/src
+    - /tmp

@@ -6,6 +6,14 @@ import json
 import mock
 from pylmod.exceptions import PyLmodException
 
+from lmod_proxy.edx_grades import edx_grades
+from lmod_proxy.edx_grades.forms import EdXGradesForm, ACTIONS
+from lmod_proxy.edx_grades.actions import (
+    get_assignments,
+    get_membership,
+    get_sections,
+    post_grades,
+)
 from lmod_proxy.tests.common import CommonTest
 
 
@@ -30,7 +38,6 @@ class TestEdXGrades(CommonTest):
 
     def test_form(self):
         """Verify the form has all the fields as we expect it"""
-        from lmod_proxy.edx_grades.forms import EdXGradesForm
 
         with self.app.app_context():
             # Fully filled out form.
@@ -84,7 +91,7 @@ class TestEdXGrades(CommonTest):
             for key, item in form.data.items():
                 self.assertEqual(self.FULL_FORM[key], item)
 
-    @mock.patch('lmod_proxy.edx_grades.log')
+    @mock.patch('lmod_proxy.edx_grades.log', autospec=True)
     def test_get_root(self, log):
         """Test the GET response returns what we want"""
         headers = self.get_basic_auth_headers()
@@ -94,7 +101,7 @@ class TestEdXGrades(CommonTest):
             headers=headers
         )
         self.assertEqual(200, response.status_code)
-        log.info.assert_assert_called_with(
+        log.info.assert_called_with(
             'edX remote gradebook GET request from %s',
             'abc'
         )
@@ -119,12 +126,11 @@ class TestEdXGrades(CommonTest):
             }
         )
 
-    @mock.patch('lmod_proxy.edx_grades.GradeBook')
+    @mock.patch('lmod_proxy.edx_grades.GradeBook', autospec=True)
     def test_post_actions(self, patched_gradebook):
         """Verify that we call the right functions with each action type"""
         local_form = copy.deepcopy(self.FULL_FORM)
 
-        from lmod_proxy.edx_grades.forms import ACTIONS
         action_list = ACTIONS.keys()
         mock_instrumented_actions = {}
         for key in action_list:
@@ -151,9 +157,6 @@ class TestEdXGrades(CommonTest):
 
     def test_get_sections(self):
         """Test get_sections actions as expected"""
-        from lmod_proxy.edx_grades.forms import EdXGradesForm
-        from lmod_proxy.edx_grades.actions import get_sections
-
         with self.app.app_context():
             form = EdXGradesForm(**self.FULL_FORM)
         gradebook = mock.MagicMock()
@@ -175,9 +178,6 @@ class TestEdXGrades(CommonTest):
 
     def test_get_assignments(self):
         """Test get_assignments actions as expected"""
-        from lmod_proxy.edx_grades.forms import EdXGradesForm
-        from lmod_proxy.edx_grades.actions import get_assignments
-
         with self.app.app_context():
             form = EdXGradesForm(**self.FULL_FORM)
         gradebook = mock.MagicMock()
@@ -199,9 +199,6 @@ class TestEdXGrades(CommonTest):
 
     def test_get_membership(self):
         """Test get_assignments actions as expected"""
-        from lmod_proxy.edx_grades.forms import EdXGradesForm
-        from lmod_proxy.edx_grades.actions import get_membership
-
         with self.app.app_context():
             form = EdXGradesForm(**self.FULL_FORM)
         gradebook = mock.MagicMock()
@@ -227,11 +224,9 @@ class TestEdXGrades(CommonTest):
         self.assertEqual(message, 'test')
         self.assertEqual(data, [{}])
 
-    @mock.patch('lmod_proxy.edx_grades.actions.log')
+    @mock.patch('lmod_proxy.edx_grades.actions.log', autospec=True)
     def test_post_grades(self, mock_log):
         """Test post_grades actions as expected"""
-        from lmod_proxy.edx_grades.forms import EdXGradesForm
-        from lmod_proxy.edx_grades.actions import post_grades
 
         file_form = copy.deepcopy(self.FULL_FORM)
         file_mock = mock.MagicMock()
@@ -274,7 +269,8 @@ class TestEdXGrades(CommonTest):
 
         with self.app.app_context():
             with mock.patch(
-                    'lmod_proxy.edx_grades.actions.render_template'
+                    'lmod_proxy.edx_grades.actions.render_template',
+                    autospec=True
             ) as mock_template:
                 message, data, success = post_grades(gradebook, form)
 
@@ -293,9 +289,6 @@ class TestEdXGrades(CommonTest):
 
     def test_post_grades_approve(self):
         """Validate that approve grades works"""
-        from lmod_proxy.edx_grades.forms import EdXGradesForm
-        from lmod_proxy.edx_grades.actions import post_grades
-
         file_form = copy.deepcopy(self.FULL_FORM)
         file_mock = mock.MagicMock()
         file_mock.stream.read.return_value = file_form['datafile']
@@ -319,6 +312,33 @@ class TestEdXGrades(CommonTest):
         )
         self.assertEqual(data, [])
 
+    def test_max_points(self):
+        """Validate max points arguments"""
+        file_form = copy.deepcopy(self.FULL_FORM)
+        file_mock = mock.MagicMock()
+        file_mock.stream.read.return_value = file_form['datafile']
+        file_form['datafile'] = file_mock
+
+        with self.app.app_context():
+            form = EdXGradesForm(**file_form)
+            gradebook = mock.MagicMock()
+            gradebook_return = {'data': {'test': 'foo'}}
+            gradebook.spreadsheet2gradebook.return_value = (
+                gradebook_return,
+                1
+            )
+
+            with mock.patch.dict(
+                'lmod_proxy.edx_grades.actions.current_app.config',
+                {'LMODP_APPROVE_GRADES': 'a'}
+            ):
+                _, data, _ = post_grades(gradebook, form)
+        assert gradebook.spreadsheet2gradebook.called
+        kwargs = gradebook.spreadsheet2gradebook.call_args[1]
+        assert kwargs['use_max_points_column']
+        assert kwargs['max_points_column'] == 'max_pts'
+        assert kwargs['normalize_column'] == 'normalize'
+
     def test_template_existence(self):
         """Just an OS test that the templates we need exist"""
         template_list = [
@@ -327,7 +347,6 @@ class TestEdXGrades(CommonTest):
             'index.html',
         ]
 
-        from lmod_proxy.edx_grades import edx_grades
         for template in template_list:
             edx_grades.open_resource('templates/edx_grades/{0}'.format(
                 template

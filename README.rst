@@ -7,7 +7,7 @@ lmod_proxy
 .. image:: https://img.shields.io/github/issues/mitodl/lmod_proxy.svg
     :target: https://github.com/mitodl/lmod_proxy/issues
 .. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
-    :target: https://github.com/mitodl/lmod_proxy/blob/master/license
+    :target: https://github.com/mitodl/lmod_proxy/blob/master/LICENSE
 
 |Deploy|
 

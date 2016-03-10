@@ -46,7 +46,7 @@ class TestWeb(CommonTest):
         imp.reload(lmod_proxy.config)
         import lmod_proxy.web
 
-        with mock.patch('lmod_proxy.web.log') as patch_log:
+        with mock.patch('lmod_proxy.web.log', autospec=True) as patch_log:
             local_app = lmod_proxy.web.app_factory()
             self.assertTrue(patch_log.critical.called)
             self.assertEqual(

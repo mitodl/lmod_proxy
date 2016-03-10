@@ -1,0 +1,8 @@
+# App specific
+.cert.pem
+.htpasswd
+lmod_proxy.yml
+
+# Heroku
+.env
+.git/
