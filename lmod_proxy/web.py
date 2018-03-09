@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 """Root flask application for lmod_proxy"""
+import json
 import logging
 import OpenSSL.crypto
 
+from config import LMODP_CERT
 from datetime import datetime
 from flask import Flask, redirect, url_for
 from flask.ext.log import Logging
@@ -56,13 +58,18 @@ def index(user):
     """
     return redirect(url_for('edx_grades.index'))
 
+
 @app.route('/status', methods=['GET'])
 def status():
-    """
+    """Route to get app cert expiration date
+
+    Return: json object containing app_cert_expiratin date and status
     """
     app_cert_file = open(LMODP_CERT, 'rt').read()
-    app_cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, app_cert_file)
-    app_cert_expiration = datetime.strptime(app_cert.get_notAfter(), '%Y%m%d%H%M%SZ')
+    app_cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
+                                               app_cert_file)
+    app_cert_expiration = datetime.strptime(app_cert.get_notAfter(),
+                                            '%Y%m%d%H%M%SZ')
     date_delta = app_cert_expiration - datetime.now()
     retval = {
         'app_cert_expires': app_cert_expiration.strftime('%Y-%m-%dT%H:%M:%S'),
