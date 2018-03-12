@@ -9,11 +9,6 @@ lmod_proxy
 .. image:: https://img.shields.io/badge/license-AGPLv3-blue.svg
     :target: https://github.com/mitodl/lmod_proxy/blob/master/LICENSE
 
-|Deploy|
-
-.. |Deploy| image:: https://www.herokucdn.com/deploy/button.png
-   :target: https://heroku.com/deploy
-
 Flask application for proxying requests to the MIT Learning Modules
 API from edx-platform.
 
