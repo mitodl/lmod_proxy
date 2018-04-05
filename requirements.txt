@@ -1,11 +1,10 @@
---index-url https://pypi.python.org/simple/
+setuptools==38.5.2
 flask==0.12.2
 flask-log==0.1.0
 passlib==1.7.1
 pylmod==0.2.0
 pyopenssl==17.5.0
 PyYAML==3.12
-setuptools==38.5.2
 uwsgi==2.0.17
 
 -e .
