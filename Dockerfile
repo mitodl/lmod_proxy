@@ -1,9 +1,8 @@
-FROM ubuntu:trusty
+FROM ubuntu:xenial
 MAINTAINER ODL DevOps <mitx-devops@mit.edu>
 
 # Install base packages
-RUN apt-get update
-RUN apt-get install -y python-pip python-dev
+RUN apt-get update && apt-get install -y python-pip python-dev
 RUN pip install pip --upgrade
 
 # Add non-root user.
@@ -13,11 +12,10 @@ RUN adduser --disabled-password --gecos "" mitodl
 COPY . /src
 WORKDIR /src
 RUN chown -R mitodl:mitodl /src
+RUN touch .htpasswd && chmod 666 .htpasswd && touch .cert.pem && chmod 666 .cert.pem
 
 # Install project packages
-RUN pip install tox
-RUN pip install -r ./requirements.txt &&\
-    pip install -r ./test_requirements.txt
+RUN pip install -r ./requirements.txt
 
 
 # Clean up
