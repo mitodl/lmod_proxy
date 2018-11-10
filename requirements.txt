@@ -1,5 +1,5 @@
 setuptools==38.5.2
-flask==0.12.2
+flask==0.12.3
 flask-log==0.1.0
 passlib==1.7.1
 pylmod==0.2.0
