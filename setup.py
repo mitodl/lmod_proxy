@@ -62,14 +62,26 @@ setup(
     long_description=README,
     packages=find_packages(),
     install_requires=[
-        'flask',
-        'flask-log',
-        'passlib',
-        'pylmod',
-        'PyYAML',
-        'uwsgi',
-        'Flask-WTF',
+        'Flask~=1.1',
+        'passlib~=1.7',
+        'pylmod==1.0.2',
+        'pyopenssl~=19.0',
+        'PyYAML~=5.1',
+        'uWSGI~=2.0',
+        'Flask-WTF~=0.14.0',
     ],
+    extras_require={
+        'dev': [
+            'pyflakes~=2.0',
+            'pytest~=5.0',
+            'pytest-cache~=1.0',
+            'pytest-cov~=2.0',
+            'pytest-flakes~=4.0',
+            'pytest-pep8~=1.0',
+            'semantic_version~=2.0',
+            'tox~=3.0'
+        ]
+    },
     entry_points={'console_scripts': [
         'lmod_proxy = lmod_proxy.cmd:run_server',
     ]},
@@ -79,8 +91,6 @@ setup(
         'Intended Audience :: Education',
         'Programming Language :: Python',
     ],
-    test_suite="lmod_proxy.tests",
-    tests_require=tests_require,
     cmdclass={"test": PyTest},
     include_package_data=True,
     zip_safe=False,

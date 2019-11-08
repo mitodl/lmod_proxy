@@ -1,27 +1,22 @@
 # -*- coding: utf-8 -*-
 """Root flask application for lmod_proxy"""
 import json
-import logging
 import OpenSSL.crypto
 
-from config import LMODP_CERT
+from .config import LMODP_CERT
 from datetime import datetime
 from flask import Flask, redirect, url_for
-from flask.ext.log import Logging
 from passlib.apache import HtpasswdFile
 
 from lmod_proxy import __project__
 from lmod_proxy.auth import requires_auth
 from lmod_proxy.edx_grades import edx_grades
 
-log = logging.getLogger('lmod_proxy')  # pylint: disable=invalid-name
-
 
 def app_factory():
     """Startup and application factory"""
     new_app = Flask(__project__)
     new_app.config.from_object('lmod_proxy.config'.format(__project__))
-    Logging(new_app)
 
     new_app.register_blueprint(edx_grades, url_prefix='/edx_grades')
     # Load up user database
@@ -30,12 +25,12 @@ def app_factory():
             new_app.config['LMODP_HTPASSWD_PATH']
         )
     except IOError:
-        log.critical(
+        new_app.logger.critical(
             'No htpasswd file loaded, please set `LMODP_HTPASSWD`'
             'environment variable to a valid apache htpasswd file.'
         )
         new_app.config['users'] = HtpasswdFile()
-    log.debug(
+    new_app.logger.debug(
         'Starting with configuration:\n %s',
         '\n'.join([
             '{0}: {1}'.format(x, y)

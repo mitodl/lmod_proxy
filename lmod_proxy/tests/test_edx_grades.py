@@ -3,7 +3,7 @@
 import copy
 import json
 
-import mock
+import unittest.mock as mock
 from pylmod.exceptions import PyLmodException
 
 from lmod_proxy.edx_grades import edx_grades
@@ -121,7 +121,7 @@ class TestEdXGrades(CommonTest):
             json.loads(response.data),
             {
                 'msg': ('Malformed API Call: {\'user\': '
-                        '[u\'Invalid email address.\']}'),
+                        '[\'Invalid email address.\']}'),
                 'data': [],
             }
         )

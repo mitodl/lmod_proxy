@@ -4,7 +4,7 @@ Testing of the module level stuff itself
 """
 import unittest
 
-import mock
+import unittest.mock as mock
 import semantic_version
 
 

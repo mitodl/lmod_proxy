@@ -3,11 +3,10 @@
 problems like basic authentication.
 """
 import base64
-import imp
+import importlib
 import os
 import unittest
-
-import mock
+import unittest.mock as mock
 
 
 def get_htpasswd_path():
@@ -38,7 +37,7 @@ class CommonTest(unittest.TestCase):
         import lmod_proxy.config
         from lmod_proxy.web import app_factory
 
-        imp.reload(lmod_proxy.config)
+        importlib.reload(lmod_proxy.config)
         self.app = app_factory()
 
     def get_basic_auth_headers(self, invalid=False):
@@ -49,6 +48,7 @@ class CommonTest(unittest.TestCase):
             invalid (bool): if set to True, returns bad authentication
         """
         user = self.NOT_USER if invalid else self.TEST_USER
-        return dict(Authorization='Basic {0}'.format(base64.b64encode(
-            '{0}:{1}'.format(user, self.TEST_PASS)
-        )))
+        user_pass = '{0}:{1}'.format(user, self.TEST_PASS)
+        b64_bytes = base64.b64encode(bytes(user_pass, encoding='utf-8'))
+        b64_user_pass_str = str(b64_bytes, encoding='utf-8')
+        return {'Authorization': 'Basic {0}'.format(b64_user_pass_str)}

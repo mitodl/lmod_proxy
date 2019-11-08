@@ -5,7 +5,7 @@ import os
 import tempfile
 import unittest
 
-import mock
+import unittest.mock as mock
 import yaml
 
 from lmod_proxy.tests.common import get_htpasswd_path

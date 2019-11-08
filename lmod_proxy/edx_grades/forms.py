@@ -12,10 +12,10 @@ from lmod_proxy.edx_grades.actions import (
 )
 
 ACTIONS = {
-    u'post-grades': post_grades,
-    u'get-membership': get_membership,
-    u'get-assignments': get_assignments,
-    u'get-sections': get_sections,
+    'post-grades': post_grades,
+    'get-membership': get_membership,
+    'get-assignments': get_assignments,
+    'get-sections': get_sections,
 }
 
 
@@ -32,9 +32,9 @@ class StrippedField(StringField):
 class EdXGradesForm(Form):
     """Form given to us by edx-platform."""
     gradebook = StrippedField(validators=[validators.required()])
-    user = StrippedField(id=u'user', validators=[validators.Email()])
+    user = StrippedField(id='user', validators=[validators.Email()])
     datafile = FileField(
-        id=u'datafile',
+        id='datafile',
         validators=[validators.Optional()]
     )
     section = StrippedField(id=u'section', validators=[validators.Optional()])
