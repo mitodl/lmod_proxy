@@ -71,4 +71,4 @@ advanced settings with something like:
 
 Development Notes
 =================
-See the `Development Notes <https://github.com/mitodl/lmod_proxy/Development.rst>`_
+See the `Development Notes <https://github.com/mitodl/lmod_proxy/blob/master/Development.rst>`_
