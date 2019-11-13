@@ -1,6 +1,13 @@
 Release Notes
 =============
 
+Release 1.0.0
+-------------
+- Upgrade to Python 3 and update dependencies
+- Install coveralls in .travis.yml
+- Update copyright year
+- Add .gitignore exclusion for venv/
+
 Release 0.2.0
 -------------
 

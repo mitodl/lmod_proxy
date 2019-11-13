@@ -52,7 +52,7 @@ README = open('README.rst').read()
 
 setup(
     name='lmod_proxy',
-    version='0.2.0',
+    version='1.0.0',
     license='AGPLv3',
     author='MIT ODL Engineering',
     author_email='odl-engineering@mit.edu',
@@ -86,7 +86,7 @@ setup(
         'lmod_proxy = lmod_proxy.cmd:run_server',
     ]},
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Intended Audience :: Education',
         'Programming Language :: Python',
