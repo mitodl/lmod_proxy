@@ -32,6 +32,11 @@ LMODP_CERT=/path/to/mycert.pem``.  The certificate needs to be a plain
 (no passphrase) base64 encoded file with both your certificate and
 private key from MIT.
 
+macOS tip (likely relevant for other OSes, too): You can export your MIT
+certificate from Keychain Access to a PKCS file (with the ``.p12`` extension).
+Then you can convert it to PEM with the following command: ``openssl pkcs12 -in
+your_certificate.p12 -out  your_certificate.pem -nodes``
+
 
 Running on Heroku
 =================
@@ -64,3 +69,6 @@ advanced settings with something like:
     "section": "devops01"
   }
 
+Development Notes
+=================
+See the `Development Notes <https://github.com/mitodl/lmod_proxy/Development.rst>`_

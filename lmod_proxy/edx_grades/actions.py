@@ -37,8 +37,8 @@ def post_grades(gradebook, form):
             max_points_column='max_pts',
             normalize_column='normalize'
         )
-    except PyLmodException, ex:
-        error_message = unicode(ex)
+    except PyLmodException as ex:
+        error_message = str(ex)
 
     number_failed = 0
     if results and results.get('data'):
@@ -71,9 +71,9 @@ def get_membership(gradebook, form):
             simple=True,
             section_name=form.section.data
         )
-    except (PyLmodException, RequestException), ex:
+    except (PyLmodException, RequestException) as ex:
         data = [{}]
-        error_message = unicode(ex)
+        error_message = str(ex)
     return (
         error_message or 'Successfully retrieved students',
         data,
@@ -93,9 +93,9 @@ def get_assignments(gradebook, form):
     error_message = ''
     try:
         data = gradebook.get_assignments(simple=True)
-    except (PyLmodException, RequestException), ex:
+    except (PyLmodException, RequestException) as ex:
         data = [{}]
-        error_message = unicode(ex)
+        error_message = str(ex)
     return (
         error_message or 'Successfully retrieved assignments',
         data,
@@ -115,9 +115,9 @@ def get_sections(gradebook, form):
     error_message = ''
     try:
         data = gradebook.get_sections(simple=True)
-    except (PyLmodException, RequestException), ex:
+    except (PyLmodException, RequestException) as ex:
         data = [{}]
-        error_message = unicode(ex)
+        error_message = str(ex)
     return (
         error_message or 'Successfully retrieved sections',
         data,

@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """Basic authentication decorator for views"""
 from functools import wraps
-import logging
-
 from flask import current_app, request, Response
-
-log = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
 
 def check_basic_auth(username, password):
@@ -15,7 +11,7 @@ def check_basic_auth(username, password):
     """
     valid = current_app.config['users'].check_password(username, password)
     if not valid:
-        log.warn('Invalid login from %s', username)
+        current_app.logger.warning('Invalid login from %s', username)
         valid = False
     return (
         valid,

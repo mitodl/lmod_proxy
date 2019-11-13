@@ -2,7 +2,7 @@
 """
 Test out the basic authentication module.
 """
-import mock
+import unittest.mock as mock
 
 from lmod_proxy.auth import check_basic_auth, requires_auth
 from lmod_proxy.tests.common import CommonTest

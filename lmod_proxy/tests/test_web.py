@@ -2,9 +2,8 @@
 """
 Test the root Web application
 """
-import imp
-
-import mock
+import importlib
+import unittest.mock as mock
 from passlib.apache import HtpasswdFile
 
 from lmod_proxy.tests.common import CommonTest
@@ -17,7 +16,7 @@ class TestWeb(CommonTest):
         """Setup commonly needed objects like the flask test client"""
         super(TestWeb, self).setUp()
         import lmod_proxy.web
-        imp.reload(lmod_proxy.web)
+        importlib.reload(lmod_proxy.web)
         self.client = lmod_proxy.web.app.test_client()
 
     def test_redirect(self):
@@ -42,14 +41,16 @@ class TestWeb(CommonTest):
     )
     def test_htpasswd_file(self):
         """Verify we still create an app, even without an htpasswd file"""
+        import logging
         import lmod_proxy.config
-        imp.reload(lmod_proxy.config)
+        importlib.reload(lmod_proxy.config)
         import lmod_proxy.web
 
-        with mock.patch('lmod_proxy.web.log', autospec=True) as patch_log:
-            local_app = lmod_proxy.web.app_factory()
-            self.assertTrue(patch_log.critical.called)
-            self.assertEqual(
-                local_app.config['users'].users(),
-                HtpasswdFile().users()
-            )
+        logging.Logger.critical = mock.MagicMock(return_value=None)
+
+        local_app = lmod_proxy.web.app_factory()
+        self.assertTrue(logging.Logger.critical.called)
+        self.assertEqual(
+            local_app.config['users'].users(),
+            HtpasswdFile().users()
+        )

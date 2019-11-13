@@ -1,10 +1,26 @@
-setuptools==38.5.2
-flask==0.12.4
-flask-log==0.1.0
+--index-url https://pypi.org/simple/
+
+certifi==2019.9.11
+cffi==1.13.2
+chardet==3.0.4
+Click==7.0
+cryptography==2.8
+Flask==1.1.1
+Flask-WTF==0.14.2
+idna==2.8
+itsdangerous==1.1.0
+Jinja2==2.10.3
+MarkupSafe==1.1.1
 passlib==1.7.1
-pylmod==0.2.0
-pyopenssl==17.5.0
-PyYAML==3.12
-uwsgi==2.0.17
+pycparser==2.19
+pylmod==1.0.2
+pyOpenSSL==19.0.0
+PyYAML==5.1.2
+requests==2.22.0
+six==1.13.0
+urllib3==1.25.6
+uWSGI==2.0.18
+Werkzeug==0.16.0
+WTForms==2.2.1
 
 -e .

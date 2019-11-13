@@ -62,3 +62,6 @@ lmod_proxy.yml
 
 # Heroku
 .env
+
+# Virtualenv
+venv/
