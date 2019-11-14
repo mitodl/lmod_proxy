@@ -9,5 +9,4 @@ lmodproxy:
   ports:
     - "8080:8080"
   volumes:
-    - .:/src
-    - /tmp
+    - .:/opt/lmod_proxy
