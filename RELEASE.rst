@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+Release 1.0.1
+-------------
+- Update Dockerfile and docker-compose.yml
+
 Release 1.0.0
 -------------
 - Upgrade to Python 3 and update dependencies
