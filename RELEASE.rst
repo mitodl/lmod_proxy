@@ -1,6 +1,10 @@
 Release Notes
 =============
 
+Release 1.0.2
+-------------
+- Add writable config files back to Docker build
+
 Release 1.0.1
 -------------
 - Update Dockerfile and docker-compose.yml

@@ -1,6 +1,6 @@
 {
   "name": "lmod_proxy",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "homepage": "https://github.com/mitodl/lmod_proxy",
   "authors": [
     "ODL Engineering <odl-engineering@mit.edu>"
