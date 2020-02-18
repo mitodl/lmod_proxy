@@ -2,9 +2,11 @@
 """Unit testing for the edx_grades blueprint"""
 import copy
 import json
+import io
 
 import unittest.mock as mock
 from pylmod.exceptions import PyLmodException
+from werkzeug.datastructures import FileStorage
 
 from lmod_proxy.edx_grades import edx_grades
 from lmod_proxy.edx_grades.forms import EdXGradesForm, ACTIONS
@@ -229,9 +231,10 @@ class TestEdXGrades(CommonTest):
         """Test post_grades actions as expected"""
 
         file_form = copy.deepcopy(self.FULL_FORM)
-        file_mock = mock.MagicMock()
-        file_mock.stream.read.return_value = file_form['datafile']
-        file_form['datafile'] = file_mock
+        file_form['datafile'] = FileStorage(
+            stream=io.BytesIO(file_form['datafile'].encode('utf8')),
+            filename='testfile.csv',
+            content_type='text/csv')
         with self.app.app_context():
             form = EdXGradesForm(**file_form)
         gradebook = mock.MagicMock()
@@ -290,9 +293,10 @@ class TestEdXGrades(CommonTest):
     def test_post_grades_approve(self):
         """Validate that approve grades works"""
         file_form = copy.deepcopy(self.FULL_FORM)
-        file_mock = mock.MagicMock()
-        file_mock.stream.read.return_value = file_form['datafile']
-        file_form['datafile'] = file_mock
+        file_form['datafile'] = FileStorage(
+            stream=io.BytesIO(file_form['datafile'].encode('utf8')),
+            filename='testfile.csv',
+            content_type='text/csv')
 
         with self.app.app_context():
             form = EdXGradesForm(**file_form)
@@ -315,9 +319,10 @@ class TestEdXGrades(CommonTest):
     def test_max_points(self):
         """Validate max points arguments"""
         file_form = copy.deepcopy(self.FULL_FORM)
-        file_mock = mock.MagicMock()
-        file_mock.stream.read.return_value = file_form['datafile']
-        file_form['datafile'] = file_mock
+        file_form['datafile'] = FileStorage(
+            stream=io.BytesIO(file_form['datafile'].encode('utf8')),
+            filename='testfile.csv',
+            content_type='text/csv')
 
         with self.app.app_context():
             form = EdXGradesForm(**file_form)

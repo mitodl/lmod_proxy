@@ -2,6 +2,7 @@
 """Actions to perform based on API request.
 """
 import logging
+from io import TextIOWrapper
 
 from flask import render_template, current_app
 from requests.exceptions import RequestException
@@ -24,7 +25,7 @@ def post_grades(gradebook, form):
     approve_grades = False
     if current_app.config['LMODP_APPROVE_GRADES']:
         approve_grades = True
-    csv_file = form.datafile.data.stream
+    csv_file = TextIOWrapper(form.datafile.data.stream, encoding='utf8')
     log.debug('Received grade CSV: %s', csv_file.read())
     # Seek back to 0 for future reading
     csv_file.seek(0)
