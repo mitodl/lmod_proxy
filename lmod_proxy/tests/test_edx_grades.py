@@ -245,10 +245,6 @@ class TestEdXGrades(CommonTest):
         with self.app.app_context():
             message, data, success = post_grades(gradebook, form)
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
-        mock_log.debug.assert_called_with(
-            'Received grade CSV: %s',
-            self.FULL_FORM['datafile']
-        )
         self.assertEqual(data, [])
 
         # Now raise an expected exception
@@ -257,10 +253,6 @@ class TestEdXGrades(CommonTest):
         with self.app.app_context():
             message, data, success = post_grades(gradebook, form)
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
-        mock_log.debug.assert_called_with(
-            'Received grade CSV: %s',
-            self.FULL_FORM['datafile']
-        )
         self.assertFalse(success)
         self.assertEqual(message, 'test')
         self.assertEqual(data, [])
@@ -278,10 +270,6 @@ class TestEdXGrades(CommonTest):
                 message, data, success = post_grades(gradebook, form)
 
         self.assertTrue(gradebook.spreadsheet2gradebook.called)
-        mock_log.debug.assert_called_with(
-            'Received grade CSV: %s',
-            self.FULL_FORM['datafile']
-        )
         mock_template.assert_called_with(
             'grade_transfer_failed.html',
             number_failed=100,
