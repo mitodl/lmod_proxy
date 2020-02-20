@@ -64,7 +64,7 @@ def status():
     app_cert = OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM,
                                                app_cert_content)
     app_cert_expiration = datetime.strptime(
-        app_cert.get_notAfter().encode('utf8'), '%Y%m%d%H%M%SZ')
+        app_cert.get_notAfter().decode('utf8'), '%Y%m%d%H%M%SZ')
     date_delta = app_cert_expiration - datetime.now()
     retval = {
         'app_cert_expires': app_cert_expiration.strftime('%Y-%m-%dT%H:%M:%S'),
