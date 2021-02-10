@@ -8,7 +8,7 @@ cffi==1.13.2
 chardet==3.0.4
 Click==7.0
 coverage==4.5.4
-cryptography==3.2
+cryptography==3.3.2
 execnet==1.7.1
 filelock==3.0.12
 Flask==1.1.1
