@@ -23,7 +23,7 @@ packaging==19.2
 passlib==1.7.1
 pep8==1.7.1
 pluggy==0.13.0
-py==1.8.0
+py==1.10.0
 pycparser==2.19
 pyflakes==2.1.1
 pylmod==1.0.2
