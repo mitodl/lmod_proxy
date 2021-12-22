@@ -1,3 +1,5 @@
+MIT is deprecating the Learning Modules application and we have stopped using this app. This repository is archived. 
+
 lmod_proxy
 ==========
 .. image:: https://img.shields.io/travis/mitodl/lmod_proxy.svg
